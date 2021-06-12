@@ -16,8 +16,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: [true, "This email is already in use"],
-        maxLength: [12, "maximum email length is 12"],
-        minLength: [3, "minimum email length is 3"]
     },
 });
 

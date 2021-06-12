@@ -5,7 +5,7 @@ router.post('/create', (req, res)=>{
     console.log(req.body.username);
     const user = new User({
         username: req.body.username,
-        password: req.body.pass,
+        password: req.body.password,
         email: req.body.email
     });
     user.save((user, err)=>{
