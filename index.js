@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -10,7 +11,8 @@ PORT = process.env.PORT || 5000;
 app.use(express.urlencoded({ extended:true }));
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://sd8capricon:WeAreNo.1@cluster0.ep8vh.mongodb.net/SecuredMessengerDB?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true});
+const DB_URI = process.env.DB_URI
+mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true});
 
 app.use('/user', userRoutes);
 
