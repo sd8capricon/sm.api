@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: [true, "This username is already taken"],
+        unique: true,
         maxLength: [12, "maximum username length is 12"],
         minLength: [3, "minimum username length is 3"]
     },
