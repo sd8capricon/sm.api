@@ -8,7 +8,7 @@ const userSchema = new Schema({
         maxLength: [12, "maximum username length is 12"],
         minLength: [3, "minimum username length is 3"]
     },
-    pasword: {
+    password: {
         type: String,
         required: true,
     },
