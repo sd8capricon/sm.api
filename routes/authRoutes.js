@@ -1,50 +1,66 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
 const jwtutil = require('../utils/jwtutil');
 
 router.post('/register', (req, res)=>{
     console.log(req.body.username);
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email
-    });
-    user.save((err, user)=>{
-        if(user){
-            res.json({
-                user: user,
-            })
-        }
-        else{
-            console.log(err)
-            res.json({
-                errCode: err.code,
-                errKey: err.keyValue
-            })
-        }
-    });
+    const initialPassword = req.body.password;
+    if(initialPassword.length>=6 && initialPassword.length<=15){
+        bcrypt.genSalt(10, (err, salt)=>{
+            bcrypt.hash(initialPassword, salt, (err, hash)=>{
+                const user = new User({
+                    username: req.body.username,
+                    password: hash,
+                    email: req.body.email
+                });
+                user.save((err, user)=>{
+                    if(user){
+                        res.json({
+                            user: user,
+                        });
+                    }
+                    else{
+                        console.log(err)
+                        res.json({
+                            errCode: err.code,
+                            errKey: err.keyValue
+                        });
+                    }
+                });
+            });
+        });
+    }
+    else{
+        res.json({
+            err: 'Password should contain 6-15 characters.'
+        })
+    }
+    
 });
 
 router.post('/login', (req, res)=>{
-    username = req.body.username;
-    password = req.body.password;
+    const username = req.body.username;
+    const password = req.body.password;
     User.findOne({ username:username }, (err, user)=>{
         if(user){
             //use bcrypt to compare
-            if(password == user.password){
-                const token = jwtutil.jwtSign(username);
-                res.status(200).json({
-                    user : user,
-                    isAuthenticated: true,
-                    token: token
-                });
-            }
-            else{
-                res.json({
-                    error: 'Incorrect Username or Password',
-                    isAuthenticated: false,
-                });
-            }
+            bcrypt.compare(password, user.password, (err, res)=>{
+                if(result){
+                    const token = jwtutil.jwtSign(username);
+                    res.status(200).json({
+                        user : user,
+                        isAuthenticated: true,
+                        token: token
+                    });
+                }
+                else{
+                    res.json({
+                        error: err,
+                        isAuthenticated: false,
+                    });
+                }
+            })
         }
         else{
             res.json({
