@@ -7,8 +7,8 @@ function jwtSign(username){
 }
 
 function jwtVerify(token){
-    var authStatus;
-    var error;
+    const authStatus;
+    const error;
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
         if(!err){
             authStatus = true;
