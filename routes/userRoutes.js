@@ -12,7 +12,7 @@ router.get('/', (req,res)=>{
 router.post('/sendRequest', (req, res)=>{
     fromUser = req.body.from;
     toUser = req.body.to;
-    User.findOneAndUpdate({username: toUser}, {"$addToSet":{"friendRequest":{username: fromUser}}}, { new: true },(err, user)=>{
+    User.findOneAndUpdate({username: toUser}, {$addToSet:{friendRequest:{username: fromUser}}}, { new: true },(err, user)=>{
         if(!err){
             console.log(user);
             res.json({
@@ -26,5 +26,35 @@ router.post('/sendRequest', (req, res)=>{
         }
     })
 });
+
+router.post('/acceptRequest', (req, res)=>{
+    const receiver = req.body.user;
+    const friend = req.body.friend;
+    User.findOneAndUpdate({username: receiver}, {$pull:{friendRequest:{username: friend}}, $push:{friendList: {username:friend}}}, {new: true, multi:true}, (err, user)=>{
+        if(!err){
+            console.log(user);
+            User.findOneAndUpdate({username: friend}, {$push:{friendList:{username: receiver}}}, {new: true}, (err2, user2)=>{
+                if(user2){
+                    res.json({
+                        user: user,
+                        user2: user2,
+                    });
+                }
+                else{
+                    res.json({
+                        error: err2,
+                    })
+                }
+            });
+        }
+        else{
+            res.json({
+                error: err
+            });
+        }
+    });
+});
+
+// TODO: add routes to delete received and sent friend req
 
 module.exports = router;

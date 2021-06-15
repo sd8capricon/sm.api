@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended:true }));
 app.use(express.json());
 
 const DB_URI = process.env.DB_URI
-mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true, useFindAndModify:false})
+mongoose.connect(DB_URI, {useNewUrlParser: true, autoIndex:true, useUnifiedTopology:true, useCreateIndex:true, useFindAndModify:false})
     .then(()=>console.log('Connected to MongoDB')).catch(err=> console.log(err));
 
 //Routes 
