@@ -1,9 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const http = require('http');
+const socketio = require('socket.io');
 
 const app = express();
-PORT = process.env.PORT || 5000;
+const server = http.createServer(app);
+const io = sockeio(server);
+const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended:true }));
 app.use(express.json());
@@ -18,6 +22,6 @@ const userRoutes = require('./routes/userRoutes');
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 
-app.listen(PORT, ()=>{
+server.listen(PORT, ()=>{
     console.log(`Server Listening on PORT ${PORT}`)
 });
