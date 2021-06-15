@@ -10,9 +10,18 @@ router.get('/', (req,res)=>{
 });
 
 router.post('/sendRequest', (req, res)=>{
-    fromUser = req.body.from;
-    toUser = req.body.to;
-    User.findOneAndUpdate({username: toUser}, {$addToSet:{friendRequest:{username: fromUser}}}, { new: true },(err, user)=>{
+    const fromUser = req.body.from;
+    const toUser = req.body.to;
+    const add = {
+        username: fromUser
+    }
+    User.findOneAndUpdate({username: toUser}, {
+                                                $addToSet:{
+                                                    friendRequest: {
+                                                        $each: [{username: fromUser}]
+                                                    }
+                                                }
+                                            }, { new: true },(err, user)=>{
         if(!err){
             console.log(user);
             res.json({
@@ -28,12 +37,29 @@ router.post('/sendRequest', (req, res)=>{
 });
 
 router.post('/acceptRequest', (req, res)=>{
-    const receiver = req.body.user;
-    const friend = req.body.friend;
-    User.findOneAndUpdate({username: receiver}, {$pull:{friendRequest:{username: friend}}, $push:{friendList: {username:friend}}}, {new: true, multi:true}, (err, user)=>{
+    const receiver = req.body.receiver;
+    const from = req.body.from;
+    User.findOneAndUpdate({username: receiver}, {
+                                                  $pull:{
+                                                      friendRequest:{
+                                                          username: from
+                                                        }
+                                                    }, 
+                                                  $addToSet:{
+                                                      friendList:{
+                                                        $each: [{username: from}]
+                                                        }
+                                                    }
+                                                }, {new: true, multi:true}, (err, user)=>{
         if(!err){
             console.log(user);
-            User.findOneAndUpdate({username: friend}, {$push:{friendList:{username: receiver}}}, {new: true}, (err2, user2)=>{
+            User.findOneAndUpdate({username: from}, {
+                                                      $addToSet:{
+                                                          friendList:{
+                                                            $each: [{username: receiver}]
+                                                            }
+                                                        }
+                                                    }, {new: true}, (err2, user2)=>{
                 if(user2){
                     res.json({
                         user: user,

@@ -20,13 +20,12 @@ const userSchema = new mongoose.Schema({
         unique: [true, "This email is already in use"],
     },
     friendList:[{
+        _id: false,
         username: String,
     }],
     friendRequest:[{
-        username: {
-            type:String,
-            unique: true
-        }
+        _id: false,
+        username: String,
         //TODO: add timeStamp to friend request
     }]
 });
