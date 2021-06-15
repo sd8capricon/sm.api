@@ -23,7 +23,8 @@ router.post('/register', (req, res)=>{
                     else{
                         console.log(err)
                         res.json({
-                            error: err
+                            errCode: err.code,
+                            errKey: err.keyValue
                         });
                     }
                 });
@@ -44,10 +45,10 @@ router.post('/login', (req, res)=>{
     User.findOne({ username:username }, (err, user)=>{
         if(user){
             //use bcrypt to compare
-            bcrypt.compare(password, user.password, (err, result)=>{
+            bcrypt.compare(password, user.password, (err, res)=>{
                 if(result){
                     const token = jwtutil.jwtSign(username);
-                    res.json({
+                    res.status(200).json({
                         user : user,
                         isAuthenticated: true,
                         token: token
