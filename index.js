@@ -27,6 +27,9 @@ app.use(express.json());
 io.on('connection', (socket)=>{
     console.log(`${socket.id} has joined`);
     socket.emit('message', 'hello');
+    io.on('disconnect', ()=>{
+        console.log('disconnect');
+    })
 })
 
 //connet to mongoDB
