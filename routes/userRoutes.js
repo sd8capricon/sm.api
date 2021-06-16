@@ -42,12 +42,12 @@ router.post('/acceptRequest', (req, res)=>{
     User.findOneAndUpdate({username: receiver}, {
                                                   $pull:{
                                                       friendRequest:{
-                                                          username: from
+                                                            username: from
                                                         }
                                                     }, 
                                                   $addToSet:{
                                                       friendList:{
-                                                        $each: [{username: from}]
+                                                            $each: [{username: from}]
                                                         }
                                                     }
                                                 }, {new: true, multi:true}, (err, user)=>{
@@ -56,7 +56,7 @@ router.post('/acceptRequest', (req, res)=>{
             User.findOneAndUpdate({username: from}, {
                                                       $addToSet:{
                                                           friendList:{
-                                                            $each: [{username: receiver}]
+                                                                $each: [{username: receiver}]
                                                             }
                                                         }
                                                     }, {new: true}, (err2, user2)=>{
