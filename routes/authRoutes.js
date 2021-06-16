@@ -44,7 +44,7 @@ router.post('/login', (req, res)=>{
     User.findOne({ username:username }, (err, user)=>{
         if(user){
             //use bcrypt to compare
-            bcrypt.compare(password, user.password, (err, result)=>{
+            bcrypt.compare(password, user.password, (err2, result)=>{
                 if(result){
                     const token = jwtutil.jwtSign(username);
                     res.json({
@@ -55,7 +55,7 @@ router.post('/login', (req, res)=>{
                 }
                 else{
                     res.json({
-                        error: err,
+                        error: "incorrect username or password",
                         isAuthenticated: false,
                     });
                 }
@@ -63,7 +63,7 @@ router.post('/login', (req, res)=>{
         }
         else{
             res.json({
-                error: err,
+                error: "incorrect username or password",
                 isAuthenticated: false,
             });
         }
