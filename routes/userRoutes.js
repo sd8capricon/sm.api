@@ -83,7 +83,6 @@ router.post('/acceptRequest', (req, res)=>{
 
 router.post('/getfriends', (req, res)=>{
     const user = req.body.username;
-    console.log(user);
     User.findOne({username: user}, (err, user)=>{
         if(!err){
             res.json({

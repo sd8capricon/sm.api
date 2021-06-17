@@ -36,7 +36,9 @@ io.use((socket, next) => {
 io.on('connection', (socket)=>{
     console.log(`${socket.id} has joined`);
     socket.emit('message', 'hello');
-    io.on('disconnect', ()=>{
+
+    
+    socket.on('disconnect', ()=>{
         console.log('disconnect');
     })
 })
