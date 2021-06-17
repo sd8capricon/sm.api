@@ -81,6 +81,23 @@ router.post('/acceptRequest', (req, res)=>{
     });
 });
 
+router.post('/getfriends', (req, res)=>{
+    const user = req.body.username;
+    console.log(user);
+    User.findOne({username: user}, (err, user)=>{
+        if(!err){
+            res.json({
+                friends: user.friendList
+            })
+        }
+        else{
+            res.json({
+                err: err
+            })
+        }
+    })
+})
+
 // TODO: add routes to delete received and sent friend req
 
 module.exports = router;
