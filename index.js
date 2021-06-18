@@ -34,10 +34,19 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket)=>{
-    console.log(`${socket.id} has joined`);
-    socket.emit('message', 'hello');
+    const activeUsers = [];
 
-    
+    console.log(`${socket.id} has joined`, "username ",socket.username);
+
+    for(let[id, socket] of io.of("/").sockets){    //iterates over id and username for all sockets connected
+        activeUsers.push({
+            userId: id,
+            username: socket.username
+        })
+    }
+
+    socket.emit("users", activeUsers);
+
     socket.on('disconnect', ()=>{
         console.log('disconnect');
     })
