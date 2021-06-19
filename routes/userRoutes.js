@@ -97,6 +97,11 @@ router.post('/getfriends', (req, res)=>{
             }
         });
     }
+    else{
+        res.json({
+            err: "No User"
+        })
+    }
 })
 
 // TODO: add routes to delete received and sent friend req

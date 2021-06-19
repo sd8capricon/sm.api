@@ -58,7 +58,7 @@ io.on('connection', (socket)=>{
             content: content,
             fromId: socket.id,
             fromUsername: socket.username,
-            to: to
+            to: id
         }
         socket.to(id).emit('incoming private message', message)
     })
