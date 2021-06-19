@@ -34,8 +34,7 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket)=>{
-    const activeUsers = [];
-
+    let activeUsers = [];
     console.log(`${socket.id} has joined`, "username ",socket.username);
 
     for(let[id, socket] of io.of("/").sockets){    //iterates over id and username for all sockets connected
@@ -43,12 +42,34 @@ io.on('connection', (socket)=>{
             userId: id,
             username: socket.username
         })
-    }
-
+    }  
+    console.log(activeUsers);
+    //emit all connected users  
     socket.emit("users", activeUsers);
+
+    // notify existing users
+    socket.broadcast.emit("friend connected", {
+      userId: socket.id,
+      username: socket.username,
+    });
+
+    socket.on('private message', ({ content, id })=>{
+        const message = {
+            content: content,
+            fromId: socket.id,
+            fromUsername: socket.username,
+            to: to
+        }
+        socket.to(id).emit('incoming private message', message)
+    })
+
 
     socket.on('disconnect', ()=>{
         console.log('disconnect');
+        socket.broadcast.emit("friend disconnected", {
+            userId: socket.id,
+            username: socket.username
+        });
     })
 })
 
