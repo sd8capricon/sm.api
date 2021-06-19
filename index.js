@@ -60,6 +60,9 @@ io.on('connection', (socket)=>{
             fromUsername: socket.username,
             to: id
         }
+        console.log("req got")
+        console.log("from " + socket.id)
+        console.log("to " + id)
         socket.to(id).emit('incoming private message', message)
     })
 
