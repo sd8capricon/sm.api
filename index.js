@@ -33,7 +33,9 @@ io.use((socket, next) => {
     next();
 });
 
+
 io.on('connection', (socket)=>{
+
     let activeUsers = [];
     console.log(`${socket.id} has joined`, "username ",socket.username);
 
@@ -68,7 +70,7 @@ io.on('connection', (socket)=>{
 
 
     socket.on('disconnect', ()=>{
-        console.log('disconnect');
+        console.log('disconnect '+socket.username);
         socket.broadcast.emit("friend disconnected", {
             userId: socket.id,
             username: socket.username
