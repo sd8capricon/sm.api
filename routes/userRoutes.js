@@ -81,8 +81,8 @@ router.post('/acceptRequest', (req, res)=>{
     });
 });
 
-router.post('/getfriends', (req, res)=>{
-    const user = req.body.username;
+router.get('/getfriends/:username', (req, res)=>{
+    const user = req.params.username;
     if(user){
         User.findOne({username: user}, (err, user)=>{
             if(!err){
