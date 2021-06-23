@@ -82,8 +82,14 @@ router.post('/acceptRequest', (req, res)=>{
 });
 
 router.get('/getfriends/:username', (req, res)=>{
-    const user = req.params.username;
-    if(user){
+    const user = undefined || req.params.username;
+    console.log(user);
+    if(user===null || user===undefined){
+        res.json({
+            err: "No User"
+        })
+    }
+    else if(user!==null && user!==undefined){
         User.findOne({username: user}, (err, user)=>{
             if(!err){
                 res.json({
