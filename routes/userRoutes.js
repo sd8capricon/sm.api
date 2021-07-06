@@ -20,15 +20,14 @@ router.post('/sendRequest', (req, res)=>{
                                                     }
                                                 }
                                             }, { new: true },(err, user)=>{
-        if(!err){
-            console.log(user);
+        if(user){
             res.json({
                 user: user
             })
         }
         else{
             res.json({
-                error: err
+                error: "No user"
             });
         }
     })
@@ -87,7 +86,7 @@ router.get('/getfriends/:username', (req, res)=>{
     }
     else if(user!==null && user!==undefined){
         User.findOne({username: user}, (err, user)=>{
-            if(!err){
+            if(user){
                 res.json({
                     friends: user.friendList
                 })
