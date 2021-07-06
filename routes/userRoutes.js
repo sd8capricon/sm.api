@@ -12,9 +12,7 @@ router.get('/', (req,res)=>{
 router.post('/sendRequest', (req, res)=>{
     const fromUser = req.body.from;
     const toUser = req.body.to;
-    const add = {
-        username: fromUser
-    }
+    console.log(fromUser,'  ', toUser);
     User.findOneAndUpdate({username: toUser}, {
                                                 $addToSet:{
                                                     friendRequest: {
@@ -52,7 +50,6 @@ router.post('/acceptRequest', (req, res)=>{
                                                     }
                                                 }, {new: true, multi:true}, (err, user)=>{
         if(!err){
-            console.log(user);
             User.findOneAndUpdate({username: from}, {
                                                       $addToSet:{
                                                           friendList:{
@@ -83,7 +80,6 @@ router.post('/acceptRequest', (req, res)=>{
 
 router.get('/getfriends/:username', (req, res)=>{
     const user = undefined || req.params.username;
-    console.log(user);
     if(user===null || user===undefined){
         res.json({
             err: "No User"
@@ -108,6 +104,23 @@ router.get('/getfriends/:username', (req, res)=>{
             err: "No User"
         })
     }
+})
+
+router.post('/declineRequest', (req, res)=>{
+    const user = req.body.user
+    const del = req.body.del
+    User.findOneAndUpdate({ username: user }, ( {$pull: { friendRequest: { username: del } } }), { new: true }, (err, result)=>{
+        if(!err){
+            res.json({
+                error:"Request Deleted Succesfully"
+            })
+        }
+        else{
+            res.json({
+                message:"Error Deleting Request"
+            })
+        }
+    })
 })
 
 // TODO: add routes to delete received and sent friend req
