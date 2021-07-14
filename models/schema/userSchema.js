@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
         minLength: [3, "minimum username length is 3"]
     },
     password: {
-        //TODO: add password validator
         type: String,
         required: true,
     },

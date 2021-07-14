@@ -12,7 +12,6 @@ router.get('/', (req,res)=>{
 router.post('/sendRequest', (req, res)=>{
     const fromUser = req.body.from;
     const toUser = req.body.to;
-    console.log(fromUser,'  ', toUser);
     User.findOneAndUpdate({username: toUser}, {
                                                 $addToSet:{
                                                     friendRequest: {
@@ -88,7 +87,8 @@ router.get('/getfriends/:username', (req, res)=>{
         User.findOne({username: user}, (err, user)=>{
             if(user){
                 res.json({
-                    friends: user.friendList
+                    friends: user.friendList,
+                    friendRequests: user.friendRequest
                 })
             }
             else{
@@ -122,6 +122,6 @@ router.post('/declineRequest', (req, res)=>{
     })
 })
 
-// TODO: add routes to delete received and sent friend req
+// TODO: add routes to delete sent friend req
 
 module.exports = router;
